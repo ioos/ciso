@@ -8,10 +8,8 @@ NaN = np.NaN
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def zslice(double[:, :, ::1] q,
-           double[:, :, ::1] p,
-           double p0,
-           mask_val=np.NaN):
+def zslice(double[:, :, ::1] q, double[:, :, ::1] p, double p0,
+           double mask_val=NaN):
     """
     Returns a 2D slice of the variable `q` in a 3D field defined by `p`,
     along an iso-surface at `p0` using a linear interpolation.
@@ -31,23 +29,23 @@ def zslice(double[:, :, ::1] q,
     >>> plt.pcolormesh(s50)
 
     """
-
+    p0 = -abs(p0)
     cdef int L = q.shape[2]
     cdef int M = q.shape[1]
     cdef int N = q.shape[0]
-    cdef double dp, dq, dq0
     cdef int i, j, k
 
-    cdef double[:, ::1] q_iso = np.empty((M, L), dtype=np.float64)
+    cdef np.ndarray[double, ndim=2, mode='c'] q_iso = np.empty((M, L), dtype=np.float64)
 
-    for i in range(L):
-        for j in range(M):
-            q_iso[j, i] = mask_val
-            for k in range(N-1):
-                if (((p[k, j, i] < p0) and (p[k+1, j, i] > p0)) or
-                   ((p[k, j, i] > p0) and (p[k+1, j, i] < p0))):
-                    dp = p[k+1, j, i] - p[k, j, i]
-                    dp0 = p0 - p[k, j, i]
-                    dq = q[k+1, j, i] - q[k, j, i]
-                    q_iso[j, i] = q[k, j, i] + dq*dp0/dp
-    return np.array(q_iso)
+    with nogil:
+        for i in range(L):
+            for j in range(M):
+                q_iso[j, i] = mask_val
+                for k in range(N-1):
+                    if (((p[k, j, i] < p0) and (p[k+1, j, i] > p0)) or
+                       ((p[k, j, i] > p0) and (p[k+1, j, i] < p0))):
+                        q_iso[j, i] = (q[k, j, i] +
+                                       (q[k+1, j, i] - q[k, j, i]) *  # dq
+                                       (p0 - p[k, j, i]) /  # dp0
+                                       (p[k+1, j, i] - p[k, j, i]))  # dp
+    return q_iso
