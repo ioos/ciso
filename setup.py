@@ -1,9 +1,21 @@
 import os
+import sys
 import numpy
-from setuptools import setup
-from setuptools import Extension
+from setuptools import Extension, setup
+from setuptools.command.test import test as TestCommand
 
 from Cython.Build import cythonize
+
+
+class PyTest(TestCommand):
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.verbose = True
+
+    def run_tests(self):
+        import pytest
+        errno = pytest.main(self.test_args)
+        sys.exit(errno)
 
 
 def extract_version(module='ciso'):
@@ -51,13 +63,15 @@ setup(name="ciso",
                    'Topic :: Scientific/Engineering',
                    'Topic :: Education',
                    ],
-      description='Create isosurfaces from 3D arrays',
-      url='https://github.com/hetland/ciso/',
+      description='Create isosurfaces from 2D or 3D arrays',
+      url='https://github.com/ioos/ciso',
       platforms='any',
       keywords=['oceanography', 'isosurfaces', 'APIRUS'],
       install_requires=install_requires,
-      packages=['ciso', 'ciso/tests'],
+      packages=['ciso'],
+      tests_require=['pytest'],
+      cmdclass=dict(test=PyTest),
       ext_modules=cythonize(extensions),
-      author="Robert Hetland",
+      author=["Robert Hetland"],
       author_email="hetland@tamu.edu",
       )
