@@ -1,5 +1,5 @@
 __version__ = '0.0.1'
 
-from ._ciso import *
+from .ciso import zslice
 
 __all__ = ['zslice']
