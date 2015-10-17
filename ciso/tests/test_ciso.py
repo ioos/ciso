@@ -24,57 +24,63 @@ def expected_results():
 
 
 def test_mismatch_shapes():
+    q, p, x, y = data()
     with pytest.raises(ValueError):
-        zslice(np.empty((2, 2)), np.empty((1, 2)), 0)
+        zslice(q, p[0], p0=0)
 
 
-def test_wrong_p0():
+def test_p0_wrong_shape():
+    q, p, x, y = data()
     with pytest.raises(ValueError):
-        zslice(np.empty((2, 2)), np.empty((2, 2)), np.empty((2, 2)))
+        zslice(q, p, p0=np.zeros((2, 2)))
 
 
 def test_bad_dtypes():
     # FIXME: Boolean array are converted to float!  Only str fails correctly.
+    q, p, x, y = data()
     with pytest.raises(ValueError):
-        zslice(np.empty((2, 2), dtype=np.str_), np.empty((2, 2)), 0)
+        zslice(np.empty_like(q, dtype=np.str_), p, p0=0)
 
 
 def test_good_dtypes():
     # FIXME: Using `np.asfarray` will prevent from using complex dtypes.
     # NOTE: There is probably a more "numpy" efficient way to test this.
+    q, p, x, y = data()
     dtypes = [int, float, np.integer, np.float16, np.float32,
               np.float64, np.float128, np.floating]
     for dtype in dtypes:
-        zslice(np.empty((2, 2), dtype=dtype), np.empty((2, 2)), 0)
+        zslice(np.empty_like(q, dtype=dtype), p, p0=0)
 
 
 def test_3D_input():
     q, p, x, y = data()
     K, I, J = q.shape
-    s50 = zslice(q, p, -50)
+    s50 = zslice(q, p, p0=-50)
     assert s50.shape == (I, J)
 
 
 def test_2D_input():
     q, p, x, y = data()
     K, I, J = q.shape
-    s50 = zslice(q.reshape(K, -1), p.reshape(K, -1), -50)
+    s50 = zslice(q.reshape(K, -1), p.reshape(K, -1), p0=-50)
     assert s50.shape == (I*J,)
 
 
 def test_1D_input():
+    q, p, x, y = data()
     with pytest.raises(ValueError):
-        zslice(np.empty((2)), np.empty((2)), 0)
+        zslice(q.ravel(), p.ravel(), p0=0)
 
 
 def test_gt_3D_input():
+    q, p, x, y = data()
     with pytest.raises(ValueError):
-        zslice(np.empty((2, 2, 2, 2)), np.empty((2, 2, 2, 2)), 0)
+        zslice(q[np.newaxis, ...], p[np.newaxis, ...], p0=0)
 
 
 def test_corret_results_3D():
     q, p, x, y = data()
-    s50 = zslice(q, p, -50)
+    s50 = zslice(q, p, p0=-50)
     f50 = expected_results()
     np.testing.assert_almost_equal(s50, f50)
 
@@ -82,6 +88,13 @@ def test_corret_results_3D():
 def test_corret_results_2D():
     q, p, x, y = data()
     K, I, J = q.shape
-    s50 = zslice(q.reshape(K, -1), p.reshape(K, -1), -50)
+    s50 = zslice(q.reshape(K, -1), p.reshape(K, -1), p0=-50)
     f50 = expected_results()
     np.testing.assert_almost_equal(s50, f50.ravel())
+
+
+def test_p0_outside_bounds():
+    with pytest.raises(ValueError):
+        q, p, x, y = data()
+        K, I, J = q.shape
+        zslice(q, p, p0=50)
