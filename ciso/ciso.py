@@ -33,9 +33,12 @@ def zslice(q, p, p0):
         msg = "p0 must be a float number or 0-dim array.  Got {!r}.".format
         raise ValueError(msg(p0))
 
+    if p0 < p.min() or p.max() < p0:
+        msg = "p0 {} is outise p bounds ({}, {}).".format
+        raise ValueError(msg(p0, p.min(), p.max()))
+
     q = np.asfarray(q)
     p = np.asfarray(p)
-    p0 = -abs(p0)
 
     if q.ndim == 3:
         K, J, I = q.shape
