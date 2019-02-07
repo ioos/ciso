@@ -7,8 +7,6 @@ matrix:
   include:
     - name: "default"
       env: PY=3.7
-    - name: "doctest"
-      env: PY=3.7
     - name: "coding_standards"
       env: PY=3.7
 
@@ -26,11 +24,11 @@ install:
   - python setup.py sdist && version=$(python setup.py --version) && pushd dist  && pip install --no-deps --force-reinstall ciso-${version}.tar.gz && popd
 
 script:
-  - if [[ $TRAVIS_JOB_NAME == "doctest" ]]; then
+  - if [[ $TRAVIS_JOB_NAME == "default" ]]; then
       cp -r tests /tmp && cd /tmp ;
       pytest -n 2 -rxs --cov=ciso tests ;
     fi
 
-  - if [[ $TEST_TARGET == 'coding_standards' ]]; then
+  - if [[ $TRAVIS_JOB_NAME == 'coding_standards' ]]; then
       pytest --flake8 -m flake8 ;
     fi
