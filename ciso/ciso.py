@@ -1,5 +1,3 @@
-from __future__ import (absolute_import, division, print_function)
-
 import numpy as np
 
 from ._ciso import _zslice
@@ -41,7 +39,7 @@ def zslice(q, p, p0):
     p = np.asfarray(p)
 
     if q.ndim == 3:
-        K, J, I = q.shape
+        K, J, I = q.shape  # noqa
         iso = _zslice(q.reshape(K, -1), p.reshape(K, -1), p0)
         return iso.reshape(J, I)
     elif q.ndim == 2:

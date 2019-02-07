@@ -1,19 +1,34 @@
-language: python
+language: minimal
 
-env:
-    - CONDA="python=2.7"
-    - CONDA="python=3.4"
-    - CONDA="python=3.5"
+sudo: false
+
+matrix:
+  fast_finish: true
+  include:
+    - name: "default"
+      env: PY=3.7
+    - name: "coding_standards"
+      env: PY=3.7
 
 before_install:
-    - wget http://bit.ly/miniconda -O miniconda.sh
-    - bash miniconda.sh -b -p $HOME/miniconda
-    - export PATH="$HOME/miniconda/bin:$PATH"
-    - conda update --yes conda
-    - travis_retry conda create --yes -n TEST $CONDA --file requirements.txt
-    - source activate TEST
-    - travis_retry conda install --yes pytest
+  - wget http://bit.ly/miniconda -O miniconda.sh
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - conda config --set always_yes yes --set changeps1 no --set show_channel_urls true
+  - conda update conda --quiet
+  - conda config --add channels conda-forge --force
+  - conda create --name TEST python=$PY --file requirements.txt --file requirements-dev.txt
+  - source activate TEST
+
+install:
+  - python setup.py sdist && version=$(python setup.py --version) && pushd dist  && pip install --no-deps --force-reinstall ciso-${version}.tar.gz && popd
 
 script:
-    - python setup.py build_ext -i
-    - python setup.py test
+  - if [[ $TRAVIS_JOB_NAME == "default" ]]; then
+      cp -r tests /tmp && cd /tmp ;
+      pytest -n 2 -rxs --cov=ciso tests ;
+    fi
+
+  - if [[ $TRAVIS_JOB_NAME == 'coding_standards' ]]; then
+      pytest --flake8 -m flake8 ;
+    fi
