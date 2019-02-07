@@ -2,34 +2,8 @@ import os
 import sys
 import numpy
 from setuptools import Extension, setup
-from setuptools.command.test import test as TestCommand
-
 from Cython.Build import cythonize
-
-
-class PyTest(TestCommand):
-    def finalize_options(self):
-        TestCommand.finalize_options(self)
-        self.verbose = True
-
-    def run_tests(self):
-        import pytest
-        errno = pytest.main(self.test_args)
-        sys.exit(errno)
-
-
-def extract_version(module='ciso'):
-    version = None
-    fdir = os.path.dirname(__file__)
-    fnme = os.path.join(fdir, module, '__init__.py')
-    with open(fnme) as fd:
-        for line in fd:
-            if (line.startswith('__version__')):
-                _, version = line.split('=')
-                # Remove quotation characters.
-                version = version.strip()[1:-1]
-                break
-    return version
+import versioneer
 
 rootpath = os.path.abspath(os.path.dirname(__file__))
 
@@ -49,7 +23,7 @@ extensions = [Extension("ciso._ciso", ['ciso/_ciso.pyx'],
                         include_dirs=[numpy.get_include()])]
 
 setup(name="ciso",
-      version=extract_version(),
+      version=versioneer.get_version(),
       license=LICENSE,
       long_description=long_description,
       classifiers=['Development Status :: 5 - Production/Stable',
@@ -70,7 +44,7 @@ setup(name="ciso",
       install_requires=install_requires,
       packages=['ciso'],
       tests_require=['pytest'],
-      cmdclass=dict(test=PyTest),
+      cmdclass=versioneer.get_cmdclass(),
       ext_modules=cythonize(extensions),
       author=["Robert Hetland"],
       author_email="hetland@tamu.edu",
