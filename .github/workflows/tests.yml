@@ -33,4 +33,4 @@ jobs:
       shell: bash -l {0}
       run: |
         micromamba activate TEST
-        python -m pytest -rxs tests
+        python -m pytest -rxs ciso/tests
