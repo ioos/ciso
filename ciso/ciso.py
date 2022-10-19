@@ -1,3 +1,5 @@
+"""Compute iso-surface slices on 3D fields."""
+
 import numpy as np
 
 from ciso._ciso import _zslice
@@ -5,9 +7,9 @@ from ciso._ciso import _zslice
 
 def zslice(q, p, p0):
     """
-    Returns a 2D slice of the variable `q` from a 3D field defined by `p`,
-    along an iso-surface at `p0` using a linear interpolation.
+    Return a 2D slice of the variable `q` from a 3D field defined by `p`.
 
+    The slice is defined along an iso-surface at `p0` using a linear interpolation.
     The result `q_iso` is a projection of variable at property == iso-value
     in the first non-singleton dimension.
 
@@ -24,16 +26,15 @@ def zslice(q, p, p0):
 
     """
     if q.shape != p.shape:
-        msg = "Arrays q {} and p {} must be of the same shape.".format
-        raise ValueError(msg(q.shape, p.shape))
+        raise ValueError(
+            f"Arrays q {q.shape} and p {p.shape} must be of the same shape.",
+        )
 
     if np.array(p0).squeeze().ndim != 0:
-        msg = "p0 must be a float number or 0-dim array.  Got {!r}.".format
-        raise ValueError(msg(p0))
+        raise ValueError(f"p0 must be a float number or 0-dim array.  Got {p0!r}.")
 
     if p0 < p.min() or p.max() < p0:
-        msg = "p0 {} is outise p bounds ({}, {}).".format
-        raise ValueError(msg(p0, p.min(), p.max()))
+        raise ValueError(f"p0 {p0} is outside p bounds ({p.min}, {p.max}).")
 
     q = np.asfarray(q)
     p = np.asfarray(p)
@@ -45,5 +46,4 @@ def zslice(q, p, p0):
     elif q.ndim == 2:
         return _zslice(q, p, p0)
     else:
-        msg = "Expected 2D (UGRID) or 3D (S/RGRID) arrays.  Got {}D.".format
-        raise ValueError(msg(q.ndim))
+        raise ValueError(f"Expected 2D (UGRID) or 3D (S/RGRID) arrays.  Got {q.ndim}D.")

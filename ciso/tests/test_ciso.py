@@ -1,7 +1,6 @@
-from __future__ import absolute_import, division, print_function
-
 import os
 import sys
+
 import numpy as np
 import pytest
 
@@ -39,13 +38,16 @@ def test_bad_dtypes(data):
         zslice(np.empty_like(data["q"], dtype=np.str_), data["p"], p0=0)
 
 
-@pytest.mark.parametrize("dtype", [int, float, np.int32, np.int64, np.float16, np.float32, np.float64])
+@pytest.mark.parametrize(
+    "dtype",
+    [int, float, np.int32, np.int64, np.float16, np.float32, np.float64],
+)
 def test_good_dtypes(data, dtype):
     zslice(np.empty_like(data["q"], dtype=dtype), data["p"], p0=0)
 
 
 @pytest.mark.skipif(
-    sys.platform in ["win32"],
+    sys.platform == "win32",
     reason="Windows doesn't provide float128",
 )
 def test_good_dtypes_float128(data):
