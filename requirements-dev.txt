@@ -12,4 +12,5 @@ pytest
 pytest-cov
 pytest-flake8
 pytest-xdist
+setuptools_scm
 twine
