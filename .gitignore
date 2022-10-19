@@ -1,6 +1,8 @@
-build/
-dist/
+*-output.ipynb
 *.egg-info
-_ciso*.so
+.ipynb_checkpoints/
 _ciso*.c
+_ciso*.so
+build/
 ciso/_version.py
+dist/
