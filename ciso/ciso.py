@@ -1,6 +1,6 @@
 import numpy as np
 
-from ._ciso import _zslice
+from ciso._ciso import _zslice
 
 
 def zslice(q, p, p0):
