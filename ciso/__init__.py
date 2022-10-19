@@ -1,3 +1,5 @@
+"""Cythonized ISOsurface calculation (CISO)."""
+
 from ciso.ciso import zslice
 
 __all__ = ["zslice"]
