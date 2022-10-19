@@ -1,0 +1,6 @@
+build/
+dist/
+*.egg-info
+_ciso*.so
+_ciso*.c
+ciso/_version.py

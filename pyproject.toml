@@ -1,0 +1,76 @@
+[build-system]
+requires = ["setuptools>=41.2", "setuptools_scm", "cython", "numpy", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ciso"
+dynamic = ["version", "readme"]
+description = "Create isosurfaces from 2D or 3D arrays"
+authors = [
+  {email = "hetland@tamu.edu"},
+  {name = "Robert Hetland"}
+]
+requires-python = ">=3.8"
+license = {text = "BSD-2-Clause"}
+dependencies = [
+    "cython",
+    "numpy>=1.19",
+]
+
+[project.optional-dependencies]
+extras = [
+    "gridgeo",
+    "cartopy",
+    "xarray",
+]
+
+[project.urls]
+homepage = "https://github.com/ioos/ciso"
+documentation = "https://ioos.github.io/ciso"
+repository = "https://github.com/ioos/ciso"
+
+[tool.setuptools]
+license-files = ["LICENSE.txt"]
+zip-safe = true
+platforms = ["any"]
+
+[tool.setuptools.packages.find]
+where = ["ciso"]
+
+[tool.setuptools.dynamic.readme]
+file = ["README.md"]
+
+[tool.distutils.sdist]
+formats = "gztar"
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "error",
+    "ignore::UserWarning",
+]
+addopts = "-s -rxs -v"
+
+[check-manifest]
+ignore = [
+    "*.yml",
+    ".coveragerc",
+    "docs",
+    "docs/*",
+    "notebooks",
+    "notebooks/*",
+    "tests",
+    "tests/*",
+]
+
+[tool.interrogate]
+ignore-init-method = true
+ignore-init-module = false
+ignore-magic = false
+ignore-semiprivate = false
+ignore-private = false
+ignore-module = false
+fail-under = 85
+exclude = ["setup.py", "docs", "tests"]
+verbose = 1
+quiet = false
+color = true
