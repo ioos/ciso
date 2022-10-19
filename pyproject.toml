@@ -33,13 +33,12 @@ repository = "https://github.com/ioos/ciso"
 license-files = ["LICENSE.txt"]
 zip-safe = true
 platforms = ["any"]
-packages = ["ciso"]
+
+[tool.setuptools.packages.find]
+where = ["ciso"]
 
 [tool.setuptools.dynamic.readme]
 file = ["README.md"]
-
-[tool.setuptools.dynamic.version]
-attr = "ciso.__version__"
 
 [tool.distutils.sdist]
 formats = "gztar"
