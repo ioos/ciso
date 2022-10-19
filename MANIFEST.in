@@ -5,7 +5,6 @@ include pyproject.toml
 graft ciso
 
 prune docs
-prune tests
 prune notebooks
 prune *.egg-info
 
