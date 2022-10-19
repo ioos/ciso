@@ -1,4 +1,4 @@
-from .ciso import zslice
+from ciso.ciso import zslice
 
 __all__ = ["zslice"]
 
