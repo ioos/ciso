@@ -5,7 +5,7 @@ from setuptools import Extension, setup
 
 extensions = [
     Extension(
-        "_ciso", ["ciso/_ciso.pyx"], include_dirs=[numpy.get_include()]
+        "ciso._ciso", ["ciso/_ciso.pyx"], include_dirs=[numpy.get_include()]
     )
 ]
 
