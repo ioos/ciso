@@ -1,4 +1,4 @@
-name: Build and Deploy docs
+name: Documentation
 
 on:
   pull_request:
@@ -24,18 +24,26 @@ jobs:
       with:
         environment-file: false
 
-    - name: Build environment
+    - name: Setup Micromamba
+      uses: mamba-org/setup-micromamba@v1
+      with:
+        environment-name: TEST
+        init-shell: bash
+        create-args: >-
+          python=3 pip
+          --file requirements.txt
+          --file requirements-dev.txt
+          --channel conda-forge
+
+    - name: Install ciso
       shell: bash -l {0}
       run: |
-        micromamba create --name TEST python=3 --file requirements.txt --file requirements-dev.txt --channel conda-forge
-        micromamba activate TEST
         python -m pip install -e . --no-deps --force-reinstall
 
     - name: Build documentation
       shell: bash -l {0}
       run: |
         set -e
-        micromamba activate TEST
         jupyter nbconvert --to notebook --execute notebooks/ciso_unstructure.ipynb --output=ciso_unstructure-output.ipynb
         jupyter nbconvert --to notebook --execute notebooks/ciso_c_grid.ipynb --output=ciso_c_grid-output.ipynb
         mv notebooks/*output.ipynb docs/source/
@@ -44,7 +52,7 @@ jobs:
         popd
 
     - name: Deploy
-      if: github.event_name == 'release' || github.event_name == 'push'
+      if: success() && github.event_name == 'release'
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
