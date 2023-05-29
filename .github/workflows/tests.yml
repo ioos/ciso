@@ -10,27 +10,30 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
         os: [windows-latest, ubuntu-latest, macos-latest]
       fail-fast: false
 
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup Micromamba
-      uses: mamba-org/provision-with-micromamba@v13
+    - name: Setup Micromamba ${{ matrix.python-version }}
+      uses: mamba-org/setup-micromamba@v1
       with:
-        environment-file: false
+        environment-name: TEST
+        init-shell: bash
+        create-args: >-
+          python=${{ matrix.python-version }} pip
+          --file requirements.txt
+          --file requirements-dev.txt
+          --channel conda-forge
 
-    - name: Python ${{ matrix.python-version }}
+    - name: Install ciso
       shell: bash -l {0}
       run: |
-        micromamba create --name TEST python=${{ matrix.python-version }} --file requirements.txt --file requirements-dev.txt --channel conda-forge
-        micromamba activate TEST
         python -m pip install -e . --no-deps --force-reinstall
 
     - name: Tests
       shell: bash -l {0}
       run: |
-        micromamba activate TEST
         python -m pytest -rxs ciso/tests
