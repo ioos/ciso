@@ -38,9 +38,6 @@ packages = ["ciso"]
 [tool.setuptools.dynamic.readme]
 file = ["README.md"]
 
-[tool.distutils.sdist]
-formats = "gztar"
-
 [tool.pytest.ini_options]
 filterwarnings = [
     "error",
