@@ -47,7 +47,7 @@ jobs:
           python -c "import ciso; print(f'ciso v{ciso.__version__}')" &&
           python -m pytest --pyargs ciso
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: pypi-artifacts
         path: ${{ github.workspace }}/wheelhouse/*.whl
