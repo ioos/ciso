@@ -47,9 +47,9 @@ jobs:
           python -c "import ciso; print(f'ciso v{ciso.__version__}')" &&
           python -m pytest --pyargs ciso
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: pypi-artifacts
+        name: pypi-artifacts-${{ matrix.os }}-${{ matrix.arch }}
         path: ${{ github.workspace }}/wheelhouse/*.whl
 
 
@@ -58,10 +58,11 @@ jobs:
     name: "Show artifacts"
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
-        name: pypi-artifacts
+        pattern: pypi-artifacts*
         path: ${{ github.workspace }}/dist
+        merge-multiple: true
 
     - shell: bash
       run: |
@@ -75,10 +76,11 @@ jobs:
     # upload to PyPI for every tag starting with 'v'
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
     steps:
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
-        name: pypi-artifacts
+        pattern: pypi-artifacts*
         path: ${{ github.workspace }}/dist
+        merge-multiple: true
 
     - uses: pypa/gh-action-pypi-publish@release/v1
       with:
