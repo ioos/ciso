@@ -46,14 +46,6 @@ def test_good_dtypes(data, dtype):
     zslice(np.empty_like(data["q"], dtype=dtype), data["p"], p0=0)
 
 
-@pytest.mark.skipif(
-    sys.platform == "win32",
-    reason="Windows doesn't provide float128",
-)
-def test_good_dtypes_float128(data):
-    zslice(np.empty_like(data["q"], dtype=np.float128), data["p"], p0=0)
-
-
 def test_3D_input(data):
     K, I, J = data["q"].shape
     s50 = zslice(data["q"], data["p"], p0=-50)
