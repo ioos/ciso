@@ -36,8 +36,8 @@ def zslice(q, p, p0):
     if p0 < p.min() or p.max() < p0:
         raise ValueError(f"p0 {p0} is outside p bounds ({p.min}, {p.max}).")
 
-    q = np.asfarray(q)
-    p = np.asfarray(p)
+    q = np.asarray(q, dtype=float)
+    p = np.asarray(p, dtype=float)
 
     if q.ndim == 3:
         K, J, I = q.shape  # noqa
