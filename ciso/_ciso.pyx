@@ -3,7 +3,8 @@ cimport cython
 import numpy as np
 cimport numpy as np
 
-NaN = np.NaN
+np.import_array()
+NaN = np.nan
 
 
 @cython.boundscheck(False)
