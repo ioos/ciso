@@ -2,7 +2,7 @@
 requires = [
   "setuptools>=41.2",
   "setuptools-scm",
-  "cython",
+  "cython>=3",
   "oldest-supported-numpy ; python_version < '3.9'",
   "numpy>=2.0.0rc1 ; python_version >= '3.9'",
   "wheel",
@@ -11,8 +11,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ciso"
-dynamic = ["version", "readme"]
+dynamic = ["version"]
 description = "Create isosurfaces from 2D or 3D arrays"
+readme = "README.md"
 authors = [
   {email = "hetland@tamu.edu"},
   {name = "Robert Hetland"}
@@ -20,7 +21,6 @@ authors = [
 requires-python = ">=3.9"
 license = {text = "BSD-2-Clause"}
 dependencies = [
-    "cython>=3",
     "oldest-supported-numpy ; python_version < '3.9'",
     "numpy>=2.0.0rc1 ; python_version >= '3.9'",
 ]
@@ -43,8 +43,10 @@ zip-safe = true
 platforms = ["any"]
 packages = ["ciso"]
 
-[tool.setuptools.dynamic.readme]
-file = ["README.md"]
+[tool.setuptools_scm]
+write_to = "ciso/_version.py"
+write_to_template = "__version__ = '{version}'"
+tag_regex = "^(?P<prefix>v)?(?P<version>[^\\+]+)(?P<suffix>.*)?$"
 
 [tool.pytest.ini_options]
 filterwarnings = [
