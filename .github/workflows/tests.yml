@@ -26,9 +26,5 @@ jobs:
       with:
         manifest-path: pyproject.toml
 
-    - name: Install ciso
-      run: |
-        python -m pip install -e . --no-deps --force-reinstall
-
     - name: Run Tests
       run: pixi run --environment ${{ matrix.pixi-environment }} test
