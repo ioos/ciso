@@ -7,3 +7,6 @@ _ciso*.so
 build/
 ciso/_version.py
 dist/
+# pixi environments
+.pixi
+*.egg-info
