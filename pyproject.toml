@@ -93,7 +93,8 @@ install-pre-commit = "pre-commit install"
 pre-commit = "pre-commit run --all-files"
 test = "pip install -e . --no-deps --force-reinstall && pytest -rxs ciso/tests"
 docs = """\
-jupyter nbconvert --to notebook --execute notebooks/ciso_unstructure.ipynb --output=ciso_unstructure-output.ipynb
+pip install -e . --no-deps --force-reinstall
+&& jupyter nbconvert --to notebook --execute notebooks/ciso_unstructure.ipynb --output=ciso_unstructure-output.ipynb
 && jupyter nbconvert --to notebook --execute notebooks/ciso_c_grid.ipynb --output=ciso_c_grid-output.ipynb
 && mv notebooks/*output.ipynb docs/source/
 && pushd docs
