@@ -20,7 +20,7 @@ authors = [
 requires-python = ">=3.10"
 license = {text = "BSD-2-Clause"}
 dependencies = [
-    "numpy>=2",
+    "numpy",
 ]
 
 [project.optional-dependencies]
@@ -112,3 +112,5 @@ jupyter = ">=1.1.1,<2"
 nbsphinx = ">=0.9.5,<0.10"
 sphinx = ">=8.0.2,<9"
 pip = ">=24.2,<25"
+scitools-iris = ">=3.9.0,<4"
+nbclassic = ">=1.1.0,<2"
