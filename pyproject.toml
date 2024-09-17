@@ -3,8 +3,7 @@ requires = [
   "setuptools>=41.2",
   "setuptools-scm",
   "cython>=3",
-  "oldest-supported-numpy ; python_version < '3.9'",
-  "numpy>=2.0.0rc1 ; python_version >= '3.9'",
+  "numpy>=2",
   "wheel",
 ]
 build-backend = "setuptools.build_meta"
@@ -18,11 +17,10 @@ authors = [
   {email = "hetland@tamu.edu"},
   {name = "Robert Hetland"}
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = {text = "BSD-2-Clause"}
 dependencies = [
-    "oldest-supported-numpy ; python_version < '3.9'",
-    "numpy>=2.0.0rc1 ; python_version >= '3.9'",
+    "numpy>=2",
 ]
 
 [project.optional-dependencies]
@@ -79,3 +77,33 @@ exclude = ["setup.py", "docs", "tests"]
 verbose = 1
 quiet = false
 color = true
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["win-64", "linux-64", "osx-64"]
+
+[tool.pixi.environments]
+default = { features = ["py312"], solve-group = "py312" }
+py312 = { features = ["py312"], solve-group = "py312" }
+py311 = ["py311"]
+py310 = ["py310"]
+
+[tool.pixi.tasks]
+install-pre-commit = "pre-commit install"
+pre-commit = "pre-commit run --all-files"
+test = "pytest -rxs ciso/tests"
+
+[tool.pixi.feature.py312.dependencies]
+python = "3.12.*"
+
+[tool.pixi.feature.py311.dependencies]
+python = "3.11.*"
+
+[tool.pixi.feature.py310.dependencies]
+python = "3.10.*"
+
+[tool.pixi.dependencies]
+cython = ">=3.0.11,<4"
+numpy = ">1.19"
+pytest = ">=8.3.3,<9"
+pre-commit = ">=3.8.0,<4"
