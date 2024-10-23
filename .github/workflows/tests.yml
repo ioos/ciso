@@ -15,7 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        pixi-environment: [ py310, py311,  py312 ]
+        pixi-environment: [ py310, py311,  py312, py313 ]
         os: [ windows-latest, ubuntu-latest, macos-latest ]
       fail-fast: false
 
