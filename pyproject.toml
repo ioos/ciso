@@ -28,6 +28,7 @@ extras = [
     "gridgeo",
     "cartopy",
     "xarray",
+    "pooch",
 ]
 
 [project.urls]
@@ -65,18 +66,6 @@ ignore = [
     "tests/*",
 ]
 
-[tool.interrogate]
-ignore-init-method = true
-ignore-init-module = false
-ignore-magic = false
-ignore-semiprivate = false
-ignore-private = false
-ignore-module = false
-fail-under = 85
-exclude = ["setup.py", "docs", "tests"]
-verbose = 1
-quiet = false
-color = true
 
 [tool.pixi.project]
 channels = ["conda-forge"]
@@ -126,3 +115,5 @@ sphinx = ">=8.0.2,<9"
 pip = ">=24.2,<25"
 scitools-iris = ">=3.9.0,<4"
 nbclassic = ">=1.1.0,<2"
+pooch = ">=1.8.2,<2"
+cf_xarray = ">=0.10.6,<0.11"
