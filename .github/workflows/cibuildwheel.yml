@@ -80,10 +80,9 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/xarray_subset_grid/
+      url: https://pypi.org/p/ciso/
     permissions:
-      contents: read
-      actions: write  # for uploading artifacts
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     # upload to PyPI for every tag starting with 'v'
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
     steps:
