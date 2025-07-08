@@ -1,11 +1,14 @@
 name: Wheels
 
+# no permissions by default
+permissions: {}
+
 on:
   pull_request:
-
   push:
-    tags:
-      - "v*"
+  release:
+    types:
+      - published
 
 jobs:
   build_bdist:
@@ -14,27 +17,28 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu-22.04", "windows-2022", "macos-14"]
+        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
         arch: ["x86_64", "arm64", "AMD64"]
         exclude:
-        - os: ubuntu-22.04
+        - os: ubuntu-latest
           arch: arm64
-        - os: ubuntu-22.04
+        - os: ubuntu-latest
           arch: AMD64
-        - os: windows-2022
+        - os: windows-latest
           arch: arm64
-        - os: windows-2022
+        - os: windows-latest
           arch: x86_64
-        - os: macos-14
+        - os: macos-latest
           arch: AMD64
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
       with:
         fetch-depth: 0
+        persist-credentials: false
 
     - name: "Building ${{ matrix.os }} (${{ matrix.arch }}) wheels"
-      uses: pypa/cibuildwheel@v3.0.0
+      uses: pypa/cibuildwheel@95d2f3a92fbf80abe066b09418bbf128a8923df2  # v3.0.1
       env:
         # Skips pypy and musllinux for now.
         CIBW_SKIP: "pp* cp36-* cp37-* *-musllinux*"
@@ -46,7 +50,9 @@ jobs:
           python -c "import ciso; print(f'ciso v{ciso.__version__}')" &&
           python -m pytest --pyargs ciso
 
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+      permissions:
+        actions: write  # for uploading artifacts
       with:
         name: pypi-artifacts-${{ matrix.os }}-${{ matrix.arch }}
         path: ${{ github.workspace }}/wheelhouse/*.whl
@@ -55,9 +61,9 @@ jobs:
   show-artifacts:
     needs: [build_bdist]
     name: "Show artifacts"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/download-artifact@v4
+    - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
       with:
         pattern: pypi-artifacts*
         path: ${{ github.workspace }}/dist
@@ -71,18 +77,22 @@ jobs:
   publish-artifacts-pypi:
     needs: [build_bdist]
     name: "Publish to PyPI"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/xarray_subset_grid/
+    permissions:
+      contents: read
+      actions: write  # for uploading artifacts
     # upload to PyPI for every tag starting with 'v'
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
     steps:
-    - uses: actions/download-artifact@v4
+    - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
       with:
         pattern: pypi-artifacts*
         path: ${{ github.workspace }}/dist
         merge-multiple: true
 
-    - uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_PASSWORD }}
-        print_hash: true
+    - name: Publish package distributions to PyPI
+      if: success() && github.event_name == 'release'
+      uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc  # v1.12.4

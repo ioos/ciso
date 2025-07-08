@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.6.0
+  rev: v5.0.0
   hooks:
     - id: trailing-whitespace
     - id: check-ast
@@ -12,33 +12,13 @@ repos:
     - id: file-contents-sorter
       files: requirements-dev.txt
 
-- repo: https://github.com/PyCQA/flake8
-  rev: 7.0.0
-  hooks:
-    - id: flake8
-      exclude: docs/source/conf.py
-      args: [--max-line-length=105]
-
-- repo: https://github.com/pycqa/isort
-  rev: 5.13.2
-  hooks:
-    - id: isort
-      additional_dependencies: [toml]
-      args: ["--profile", "black", "--filter-files"]
-
-- repo: https://github.com/psf/black
-  rev: 24.4.2
-  hooks:
-  - id: black
-    language_version: python3
-
 - repo: https://github.com/keewis/blackdoc
-  rev: v0.3.9
+  rev: v0.4.1
   hooks:
     - id: blackdoc
 
 - repo: https://github.com/codespell-project/codespell
-  rev: v2.3.0
+  rev: v2.4.1
   hooks:
     - id: codespell
       exclude: >
@@ -47,29 +27,52 @@ repos:
           )$
       args:
         - --quiet-level=2
+        - --ignore-words-list=astroid
 
 - repo: https://github.com/asottile/pyupgrade
-  rev: v3.15.2
+  rev: v3.20.0
   hooks:
     - id: pyupgrade
       args:
         - --py36-plus
 
 - repo: https://github.com/dosisod/refurb
-  rev: v2.0.0
+  rev: v2.1.0
   hooks:
     - id: refurb
 
 - repo: https://github.com/asottile/add-trailing-comma
-  rev: v3.1.0
+  rev: v3.2.0
   hooks:
     - id: add-trailing-comma
 
-- repo: https://github.com/pycqa/pydocstyle
-  rev: 6.3.0
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.12.2
   hooks:
-    - id: pydocstyle
-      exclude: ^(docs|setup.py|ciso/tests)
+    - id: ruff
+      args: ["--fix", "--show-fixes"]
+    - id: ruff-format
+
+- repo: https://github.com/nbQA-dev/nbQA
+  rev: 1.9.1
+  hooks:
+    - id: nbqa-check-ast
+    - id: nbqa-black
+    - id: nbqa-ruff
+      args: [
+        --fix,
+        --config=ruff.toml,
+        ]
+
+- repo: https://github.com/bdice/nb-strip-paths
+  rev: v0.1.0
+  hooks:
+    - id: nb-strip-paths
+
+- repo: https://github.com/woodruffw/zizmor-pre-commit
+  rev: v1.11.0
+  hooks:
+    - id: zizmor
 
 ci:
     autofix_commit_msg: |
