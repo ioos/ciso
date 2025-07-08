@@ -82,7 +82,8 @@ jobs:
       name: pypi
       url: https://pypi.org/p/ciso/
     permissions:
-      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+      id-token: write  # for trusted publishing to PyPI
+      actions: read    # for downloading artifacts
     # upload to PyPI for every tag starting with 'v'
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
     steps:
