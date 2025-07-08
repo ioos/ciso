@@ -14,6 +14,9 @@ jobs:
   build_bdist:
     name: "Build ${{ matrix.os }} (${{ matrix.arch }}) wheels"
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      actions: write  # for uploading artifacts
     strategy:
       fail-fast: false
       matrix:
@@ -51,8 +54,6 @@ jobs:
           python -m pytest --pyargs ciso
 
     - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
-      permissions:
-        actions: write  # for uploading artifacts
       with:
         name: pypi-artifacts-${{ matrix.os }}-${{ matrix.arch }}
         path: ${{ github.workspace }}/wheelhouse/*.whl
@@ -82,7 +83,8 @@ jobs:
       name: pypi
       url: https://pypi.org/p/ciso/
     permissions:
-      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+      id-token: write  # for trusted publishing to PyPI
+      actions: read    # for downloading artifacts
     # upload to PyPI for every tag starting with 'v'
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
     steps:
