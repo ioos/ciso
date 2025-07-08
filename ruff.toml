@@ -4,6 +4,7 @@ lint.select = ["ALL"]
 
 lint.ignore = [
     "ANN",  # Type annotations
+    "COM812",  # missing-trailing-comma
     "D203",  # 1 blank line required before class docstring
     "D205",  # 1 blank line required between summary line and description
     "D213",  # incompatible. Ignoring `multi-line-summary-second-line`
