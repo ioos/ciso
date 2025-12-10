@@ -49,7 +49,7 @@ def test_good_dtypes(data, dtype):
 
 
 def test_3d_input(data):
-    K, I, J = data["q"].shape
+    _, I, J = data["q"].shape
     s50 = zslice(data["q"], data["p"], p0=-50)
     assert s50.shape == (I, J)
 
@@ -76,7 +76,7 @@ def test_corret_results_3d(data, expected_results):
 
 
 def test_corret_results_2d(data, expected_results):
-    K, I, J = data["q"].shape
+    K, _, _ = data["q"].shape
     s50 = zslice(data["q"].reshape(K, -1), data["p"].reshape(K, -1), p0=-50)
     np.testing.assert_almost_equal(s50, expected_results.ravel())
 
