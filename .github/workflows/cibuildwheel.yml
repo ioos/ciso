@@ -41,7 +41,8 @@ jobs:
     - name: "Building ${{ matrix.os }} (${{ matrix.arch }}) wheels"
       uses: pypa/cibuildwheel@298ed2fb2c105540f5ed055e8a6ad78d82dd3a7e  # v3.3.1
       env:
-        CIBW_SKIP: "pp* cp36-* cp37-* cp38-* *-musllinux*"
+        CIBW_SKIP: "pp* *-musllinux*"
+        CIBW_BUILD: "cp311-* cp314-*"
         CIBW_ARCHS: ${{ matrix.arch }}
         CIBW_BUILD_FRONTEND: build
         CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
@@ -57,7 +58,7 @@ jobs:
 
 
   show-artifacts:
-    needs: [build_bdist]
+    needs: [ build_bdist ]
     name: "Show artifacts"
     runs-on: ubuntu-latest
     steps:
@@ -73,7 +74,7 @@ jobs:
 
 
   publish-artifacts-pypi:
-    needs: [build_bdist]
+    needs: [ build_bdist ]
     name: "Publish to PyPI"
     runs-on: ubuntu-latest
     environment:
