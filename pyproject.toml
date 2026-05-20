@@ -74,8 +74,6 @@ platforms = ["win-64", "linux-64", "osx-64"]
 [tool.pixi.environments]
 default = { features = ["py314"], solve-group = "py314" }
 py314 = { features = ["py314"], solve-group = "py314" }
-py313 = ["py313"]
-py312 = ["py312"]
 py311 = ["py311"]
 
 [tool.pixi.tasks]
@@ -88,12 +86,6 @@ docs = {cmd = "mv notebooks/*output.ipynb docs/source/ && cd docs && make clean 
 
 [tool.pixi.feature.py314.dependencies]
 python = "3.14.*"
-
-[tool.pixi.feature.py313.dependencies]
-python = "3.13.*"
-
-[tool.pixi.feature.py312.dependencies]
-python = "3.12.*"
 
 [tool.pixi.feature.py311.dependencies]
 python = "3.11.*"
