@@ -79,17 +79,12 @@ py312 = ["py312"]
 py311 = ["py311"]
 
 [tool.pixi.tasks]
-install-pre-commit = "pre-commit install"
 pre-commit = "pre-commit run --all-files"
-test = "pip install -e . --no-deps --force-reinstall && pytest -rxs ciso/tests"
-docs = """\
-pip install -e . --no-deps --force-reinstall
-&& jupyter nbconvert --to notebook --execute notebooks/ciso_unstructure.ipynb --output=ciso_unstructure-output.ipynb
-&& jupyter nbconvert --to notebook --execute notebooks/ciso_c_grid.ipynb --output=ciso_c_grid-output.ipynb
-&& mv notebooks/*output.ipynb docs/source/
-&& cd docs
-&& make clean html linkcheck
-"""
+install = "pip install -e . --no-deps --force-reinstall"
+test = {cmd = "pytest -rxs ciso/tests", depends-on = ["install"]}
+ipynb_unstructure = {cmd = "jupyter nbconvert --to notebook --execute notebooks/ciso_unstructure.ipynb --output=ciso_unstructure-output.ipynb", depends-on = ["install"]}
+ipynb_c_grid = {cmd = "jupyter nbconvert --to notebook --execute notebooks/ciso_c_grid.ipynb --output=ciso_c_grid-output.ipynb", depends-on = ["ipynb_unstructure"]}
+docs = {cmd = "mv notebooks/*output.ipynb docs/source/ && cd docs && make clean html linkcheck", depends-on = ["ipynb_c_grid"] }
 
 [tool.pixi.feature.py314.dependencies]
 python = "3.14.*"
