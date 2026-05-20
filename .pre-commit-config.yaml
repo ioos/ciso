@@ -18,7 +18,7 @@ repos:
     - id: blackdoc
 
 - repo: https://github.com/codespell-project/codespell
-  rev: v2.4.1
+  rev: v2.4.2
   hooks:
     - id: codespell
       exclude: >
@@ -37,7 +37,7 @@ repos:
         - --py36-plus
 
 - repo: https://github.com/dosisod/refurb
-  rev: v2.2.0
+  rev: v2.3.1
   hooks:
     - id: refurb
 
@@ -47,7 +47,7 @@ repos:
     - id: add-trailing-comma
 
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.14.11
+  rev: v0.15.13
   hooks:
     - id: ruff
       args: ["--fix", "--show-fixes"]
@@ -70,7 +70,7 @@ repos:
     - id: nb-strip-paths
 
 - repo: https://github.com/woodruffw/zizmor-pre-commit
-  rev: v1.20.0
+  rev: v1.25.2
   hooks:
     - id: zizmor
 
