@@ -14,9 +14,6 @@ jobs:
   build_bdist:
     name: "Build ${{ matrix.os }} (${{ matrix.cibw_platform }}-${{ matrix.arch }}) wheels"
     runs-on: ${{ matrix.os }}
-    permissions:
-      contents: read
-      actions: write  # for uploading artifacts
     strategy:
       fail-fast: false
       matrix:
