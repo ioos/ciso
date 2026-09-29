@@ -1,14 +1,14 @@
 name: Wheels
 
-# no permissions by default
-permissions: {}
-
 on:
   pull_request:
   push:
   release:
     types:
       - published
+
+permissions:
+  contents: read
 
 jobs:
   build_bdist:
@@ -70,7 +70,8 @@ jobs:
       with:
         name: pypi-artifacts-${{ matrix.os }}-${{ matrix.arch }}
         path: ${{ github.workspace }}/wheelhouse/*.whl
-
+    permissions:
+      actions: write
 
   show-artifacts:
     needs: [ build_bdist ]
@@ -83,23 +84,11 @@ jobs:
         path: ${{ github.workspace }}/dist
         merge-multiple: true
 
-    - shell: bash
-      run: |
-        ls -l ${{ github.workspace }}/dist
-
-
   publish-artifacts-pypi:
     needs: [ build_bdist ]
     name: "Publish to PyPI"
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/p/ciso/
-    permissions:
-      id-token: write  # for trusted publishing to PyPI
-      actions: read    # for downloading artifacts
-    # upload to PyPI for every tag starting with 'v'
-    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
+    if: success() && github.event_name == 'release'
     steps:
     - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8.0.1
       with:
@@ -108,5 +97,9 @@ jobs:
         merge-multiple: true
 
     - name: Publish package distributions to PyPI
-      if: success() && github.event_name == 'release'
       uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33  # v1.14.2
+    environment:
+      name: pypi
+      url: https://pypi.org/p/ciso/
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
