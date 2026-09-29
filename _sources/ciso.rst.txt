@@ -1,4 +1,4 @@
-:mod:`ERDDAP class API`
+:mod:`ciso class API`
 -----------------------
 
 .. automodule:: ciso.ciso
