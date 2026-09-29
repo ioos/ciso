@@ -12,7 +12,7 @@ on:
 
 jobs:
   build_bdist:
-    name: "Build ${{ matrix.os }} (${{ matrix.arch }}) wheels"
+    name: "Build ${{ matrix.os }} (${{ matrix.cibw_platform }}-${{ matrix.arch }}) wheels"
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
@@ -21,16 +21,30 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-22.04
+          - name: Linux
+            os: ubuntu-22.04
             arch: x86_64
-          - os: ubuntu-24.04-arm
+            cibw_platform: linux
+          - name: Pyodide
+            os: ubuntu-22.04
+            arch: auto
+            cibw_platform: pyodide
+          - name: Linux-arm
+            os: ubuntu-24.04-arm
             arch: aarch64
-          - os: windows-2022
+            cibw_platform: linux
+          - name: Windows
+            os: windows-2022
             arch: AMD64
-          - os: macos-15
+            cibw_platform: windows
+          - name: macOS-arm
+            os: macos-15
             arch: arm64
-          - os: macos-15-intel
+            cibw_platform: macos
+          - name: macOS-intel
+            os: macos-15-intel
             arch: x86_64
+            cibw_platform: macos
 
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
@@ -44,6 +58,7 @@ jobs:
         CIBW_SKIP: "pp* *-musllinux*"
         CIBW_BUILD: "cp311-* cp314-*"
         CIBW_ARCHS: ${{ matrix.arch }}
+        CIBW_PLATFORM: ${{ matrix.cibw_platform }}
         CIBW_BUILD_FRONTEND: build
         CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
         CIBW_TEST_REQUIRES: abi3audit pytest
