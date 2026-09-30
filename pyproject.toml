@@ -33,10 +33,10 @@ docs = [
   "gridgeo>=1.6.0",
   "nbconvert>=7.16.6",
   "nbsphinx",
+  "notebook>=7.4.4",
   "pooch",
   "scitools-iris>=3.9.0",
   "xarray",
-  # "notebook>=7.4.4"
   { include-group = "dev" },
 ]
 
