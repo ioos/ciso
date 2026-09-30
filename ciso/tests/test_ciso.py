@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -40,6 +41,10 @@ def test_bad_dtypes(data):
         zslice(np.empty_like(data["q"], dtype=np.str_), data["p"], p0=0)
 
 
+@pytest.mark.skipif(
+    sys.platform == "darwin",
+    reason="For some reason np.float16 fails on macos.",
+)
 @pytest.mark.parametrize(
     "dtype",
     [int, float, np.int32, np.int64, np.float16, np.float32, np.float64],

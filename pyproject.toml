@@ -23,12 +23,21 @@ dependencies = [
     "numpy",
 ]
 
-[project.optional-dependencies]
-extras = [
-    "gridgeo>=1.6.0",
-    "cartopy",
-    "xarray",
-    "pooch",
+[dependency-groups]
+dev = [
+  "prek",
+  "pytest",
+]
+docs = [
+  "cartopy",
+  "gridgeo>=1.6.0",
+  "nbconvert>=7.16.6",
+  "nbsphinx",
+  "notebook>=7.4.4",
+  "pooch",
+  "scitools-iris>=3.9.0",
+  "xarray",
+  { include-group = "dev" },
 ]
 
 [project.urls]
@@ -66,40 +75,4 @@ ignore = [
     "tests/*",
 ]
 
-
-[tool.pixi.workspace]
-channels = ["conda-forge"]
-platforms = ["win-64", "linux-64", "osx-64"]
-
-[tool.pixi.environments]
-default = { features = ["py314"], solve-group = "py314" }
-py314 = { features = ["py314"], solve-group = "py314" }
-py311 = ["py311"]
-
-[tool.pixi.tasks]
-pre-commit = "pre-commit run --all-files"
-install = "pip install -e . --no-deps --force-reinstall"
-test = {cmd = "pytest -rxs ciso/tests", depends-on = ["install"]}
-ipynb_unstructure = {cmd = "jupyter nbconvert --to notebook --execute notebooks/ciso_unstructure.ipynb --output=ciso_unstructure-output.ipynb", depends-on = ["install"]}
-ipynb_c_grid = {cmd = "jupyter nbconvert --to notebook --execute notebooks/ciso_c_grid.ipynb --output=ciso_c_grid-output.ipynb", depends-on = ["ipynb_unstructure"]}
-docs = {cmd = "mv notebooks/*output.ipynb docs/source/ && cd docs && make clean html linkcheck", depends-on = ["ipynb_c_grid"] }
-
-[tool.pixi.feature.py314.dependencies]
-python = "3.14.*"
-
-[tool.pixi.feature.py311.dependencies]
-python = "3.11.*"
-
-[tool.pixi.dependencies]
-cython = ">=3.0.11,<4"
-numpy = ">=2"
-pytest = ">=8.3.3,<9"
-gridgeo = ">=1.6.0"
-nbsphinx = ">=0.9.5,<0.10"
-pip = ">=24.2,<25"
-scitools-iris = ">=3.9.0,<4"
-pooch = ">=1.8.2,<2"
-nbconvert = ">=7.16.6,<8"
-notebook = ">=7.4.4,<8"
-cartopy = ">=0.24.0,<0.25"
-setuptools-scm = ">=8.3.1,<9"
+# pre-commit = "pre-commit run --all-files"
