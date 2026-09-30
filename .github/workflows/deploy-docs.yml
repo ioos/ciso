@@ -6,11 +6,9 @@ permissions: {}
 on:
   pull_request:
   push:
-    branches:
-      - main
+    branches: [ main ]
   release:
-    types:
-      - published
+    types: [ published ]
 
 jobs:
   run:
@@ -24,13 +22,26 @@ jobs:
         fetch-depth: 0
         persist-credentials: false
 
-    - name: Setup Pixi
-      uses: prefix-dev/setup-pixi@d3f436a425481402e6a95a1d1fc10331c708cd9e  # v0.10.2
+    - name: Set up Python
+      uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
       with:
-        manifest-path: pyproject.toml
+        python-version: 3
 
-    - name: Build Docs
-      run: pixi run --environment py314 docs
+    - name: Install library
+      run: |
+        pip install --group docs
+        pip install -e .
+
+
+    - name: Build documentation
+      run: >
+        set -e
+        && jupyter nbconvert --to notebook --execute notebooks/ciso_unstructure.ipynb --output=ciso_unstructure-output.ipynb
+        && jupyter nbconvert --to notebook --execute notebooks/ciso_c_grid.ipynb --output=ciso_c_grid-output.ipynb
+        && mv notebooks/*output.ipynb docs/source/
+        && pushd docs
+        && make clean html linkcheck
+        && popd
 
     - name: Deploy
       if: success() && github.event_name == 'release'
